@@ -1,6 +1,7 @@
 {
   "scripts": {
-    "qqq": "ts-node index.ts"
+    "qqq": "ts-node index.ts",
+    "ddd": "ts-node decorator-example.ts"
   },
   "devDependencies": {
     "typescript": "^5.2.2"
