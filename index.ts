@@ -10,18 +10,68 @@ import { startStandaloneServer } from "@apollo/server/standalone";
 
 // API DOCS 만들기
 const typeDefs = `#graphql
+  input CreateBoardInput{
+    writer: String
+    title: String
+    contents: String
+  }
+
+  type MyBoard {
+    number: Int
+    writer: String
+    title: String
+    contents: String
+  }
+
   type Query {
-    hello: String
+    fetchBoards: [MyBoard]
+  }
+
+  type Mutation {
+    # 연습용 (backend-example 방식)
+    # createBoard(writer:String, title:String , contents: String):String
+
+    #실무용 (backend-practice 방식)
+    createBoard(createBoardInput: CreateBoardInput):String
   }
 `;
 
 // API  만들기
 const resolvers = {
   Query: {
-    fetchBoards: () => {},
+    fetchBoards: async () => {
+      // 1. 모두꺼내기
+      const result = await Board.find();
+      console.log(result);
+
+      // // 2. 한개만 꺼내기
+      // const result = await Board.findOne({ where: { number: 3 } });
+      // console.log(result);
+
+      return result;
+    },
   },
   Mutation: {
-    createBoard: () => {},
+    createBoard: async (parent: any, context: any, args: any, info: any) => {
+      await Board.insert({
+        ...args.createBoardInput,
+
+        //하나 하나 모두 입력하는 비효율적인 방식
+        // writer: args.createBoardInput.writer,
+        // title: args.createBoardInput.title,
+        // content: args.createBoardInput.contents,
+      });
+      return "게시글 등록에 성공했어요!!";
+    },
+
+    updateBoard: async()  => {
+      await Board.update ({number:3}, {{writer:"영희"}}) //3 번게시물 수정
+    },
+
+    deleteBoard: async() =>{
+      await Board.delete({number:3}) //3번게시물 삭제
+      await Board.update({number:3} , {isDelete: true}) //3번게시물을 삭제했다고 치자 (소프트 딜리트)
+    }
   },
 };
 
