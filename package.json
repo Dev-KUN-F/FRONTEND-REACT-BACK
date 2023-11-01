@@ -1,0 +1,11 @@
+{
+  "scripts": {
+    "qqq": "ts-node index.ts"
+  },
+  "devDependencies": {
+    "typescript": "^5.2.2"
+  },
+  "dependencies": {
+    "ts-node": "^10.9.1"
+  }
+}
